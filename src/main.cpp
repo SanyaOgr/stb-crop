@@ -29,17 +29,15 @@ void printUsageStr()
 Rect<size_t> mapToPixels(Rect<float> percents, size_t width, size_t height)
 {
     Rect<size_t> ret{};
-    ret.left = round(percents.left * static_cast<float>(width) / 100.f);
-    ret.top = round(percents.top * static_cast<float>(height) / 100.f);
-    ret.width = round(percents.width * static_cast<float>(width) / 100.f);
-    ret.height = round(percents.height * static_cast<float>(height) / 100.f);
+    ret.left = percents.left * width / 100.f;
+    ret.top = percents.top * height / 100.f;
+    ret.width = percents.width * width / 100.f;
+    ret.height = percents.height * height / 100.f;
     return ret;
 }
 
 int main(int argc, char** argv)
 {
-    std::cout << "--- hello stb-crop ---" << std::endl;
-
     if(argc == 1)
     {
         printUsageStr();
@@ -86,8 +84,6 @@ int main(int argc, char** argv)
     rectInPercents.width = atof(argv[optind + 2]) - rectInPercents.left;
     rectInPercents.height = atof(argv[optind + 3]) - rectInPercents.top;
 
-    rectInPixels = mapToPixels(rectInPercents, 800, 600);
-
     int srcWidth = 0;
     int srcHeight = 0;
     int channels = 0;
@@ -97,6 +93,8 @@ int main(int argc, char** argv)
         std::cout << "Not read image: " << srcPath << "\n";
         return 2;
     }
+
+    rectInPixels = mapToPixels(rectInPercents, srcWidth, srcHeight);
     
     stbi_uc* dstImg = new stbi_uc[rectInPixels.width * rectInPixels.height * channels];
     
