@@ -26,6 +26,16 @@ void printUsageStr()
     std::cout << "Usage: -s [source image path] -d [destination image path] -q [quality] -- [x1] [y1] [x2] [y2]\n";
 }
 
+Rect<unsigned int> mapToPixels(Rect<float> percents, unsigned int width, unsigned int height)
+{
+    Rect<unsigned int> ret{};
+    ret.x1 = round(percents.x1 * width / 100.f);
+    ret.y1 = round(percents.y1 * height / 100.f);
+    ret.x2 = round(percents.x2 * width / 100.f);
+    ret.y2 = round(percents.y2 * height / 100.f);
+    return ret;
+}
+
 int main(int argc, char** argv)
 {
     std::cout << "--- hello stb-crop ---" << std::endl;
@@ -39,7 +49,7 @@ int main(int argc, char** argv)
     std::string srcPath{};
     std::string dstPath{};
     Rect<float> rectInPercents{};
-    //Rect<unsigned int> rectInPixels{};
+    Rect<unsigned int> rectInPixels{};
     unsigned int quality = 0;
 
     int opt = 0;
@@ -81,6 +91,11 @@ int main(int argc, char** argv)
     std::cout << "Quality: " << quality << "\n";
     std::cout << "Source: " << srcPath << "\n";
     std::cout << "Destination: " << dstPath << "\n";
+
+    rectInPixels = mapToPixels(rectInPercents, 800, 600);
     
+    std::cout << "Pount 1 px: " << rectInPixels.x1 << " " << rectInPixels.y1 << "\n";
+    std::cout << "Pount 2 px: " << rectInPixels.x2 << " " << rectInPixels.y2 << "\n";
+
     return 0;
 }
