@@ -10,15 +10,15 @@
 
 #include <iostream>
 #include <unistd.h>
-#include <string>
+#include <cstring>
 
 template<class T>
 struct Rect
 {
-    T x1;
-    T y1;
-    T x2;
-    T y2;
+    T left;
+    T top;
+    T width;
+    T height;
 };
 
 void printUsageStr()
@@ -26,13 +26,13 @@ void printUsageStr()
     std::cout << "Usage: -s [source image path] -d [destination image path] -q [quality] -- [x1] [y1] [x2] [y2]\n";
 }
 
-Rect<unsigned int> mapToPixels(Rect<float> percents, unsigned int width, unsigned int height)
+Rect<size_t> mapToPixels(Rect<float> percents, size_t width, size_t height)
 {
-    Rect<unsigned int> ret{};
-    ret.x1 = round(percents.x1 * width / 100.f);
-    ret.y1 = round(percents.y1 * height / 100.f);
-    ret.x2 = round(percents.x2 * width / 100.f);
-    ret.y2 = round(percents.y2 * height / 100.f);
+    Rect<size_t> ret{};
+    ret.left = round(percents.left * static_cast<float>(width) / 100.f);
+    ret.top = round(percents.top * static_cast<float>(height) / 100.f);
+    ret.width = round(percents.width * static_cast<float>(width) / 100.f);
+    ret.height = round(percents.height * static_cast<float>(height) / 100.f);
     return ret;
 }
 
@@ -46,11 +46,11 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    std::string srcPath{};
-    std::string dstPath{};
+    const char* srcPath{};
+    const char* dstPath{};
     Rect<float> rectInPercents{};
-    Rect<unsigned int> rectInPixels{};
-    unsigned int quality = 0;
+    Rect<size_t> rectInPixels{};
+    int quality = 0;
 
     int opt = 0;
     while((opt = getopt(argc, argv, "q:s:d:")) != -1)
@@ -81,21 +81,41 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    rectInPercents.x1 = atof(argv[optind]);
-    rectInPercents.y1 = atof(argv[optind + 1]);
-    rectInPercents.x2 = atof(argv[optind + 2]);
-    rectInPercents.y2 = atof(argv[optind + 3]);
-
-    std::cout << "Pount 1: " << rectInPercents.x1 << " " << rectInPercents.y1 << "\n";
-    std::cout << "Pount 2: " << rectInPercents.x2 << " " << rectInPercents.y2 << "\n";
-    std::cout << "Quality: " << quality << "\n";
-    std::cout << "Source: " << srcPath << "\n";
-    std::cout << "Destination: " << dstPath << "\n";
+    rectInPercents.left = atof(argv[optind]);
+    rectInPercents.top = atof(argv[optind + 1]);
+    rectInPercents.width = atof(argv[optind + 2]) - rectInPercents.left;
+    rectInPercents.height = atof(argv[optind + 3]) - rectInPercents.top;
 
     rectInPixels = mapToPixels(rectInPercents, 800, 600);
-    
-    std::cout << "Pount 1 px: " << rectInPixels.x1 << " " << rectInPixels.y1 << "\n";
-    std::cout << "Pount 2 px: " << rectInPixels.x2 << " " << rectInPixels.y2 << "\n";
 
+    int srcWidth = 0;
+    int srcHeight = 0;
+    int channels = 0;
+    stbi_uc* srcImg = stbi_load(srcPath, &srcWidth, &srcHeight, &channels, 0);
+    if(srcImg == nullptr)
+    {
+        std::cout << "Not read image: " << srcPath << "\n";
+        return 2;
+    }
+    
+    stbi_uc* dstImg = new stbi_uc[rectInPixels.width * rectInPixels.height * channels];
+    
+    for(size_t y = 0; y < rectInPixels.height; ++y)
+    {
+        size_t absY = rectInPixels.top + y;
+        size_t absX = rectInPixels.left;
+        size_t srcOffset = (absY * srcWidth + absX) * channels;
+        size_t dstOffset = y * rectInPixels.width * channels;
+        std::memcpy(dstImg + dstOffset, srcImg + srcOffset, rectInPixels.width * channels);
+    }
+
+    if(!stbi_write_jpg(dstPath, rectInPixels.width, rectInPixels.height, channels, dstImg, quality))
+    {
+        std::cout << "Not write image: " << dstPath << "\n";
+        return 2;
+    }
+
+    stbi_image_free(srcImg);
+    delete[] dstImg;
     return 0;
 }
