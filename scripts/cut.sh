@@ -36,7 +36,7 @@ do
     qual=$(( $qual - 10 ))
 
     echo "-- Decrease cut quality: $qual%"
-    stb-cut -s $src_path -d $cut_path -q $qual -- $x1 $y1 $x2 $y2 #> /dev/null
+    stb-cut -s $cut_path -d $cut_path -q $qual -- 0 0 100 100 #> /dev/null
 
     size=$(stat -c '%s' $cut_path)
     echo "-- Cut size: $size b"

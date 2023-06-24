@@ -94,6 +94,18 @@ int main(int argc, char** argv)
         return 2;
     }
 
+    if(rectInPercents.width == 100.f && rectInPercents.height == 100.f)
+    {
+        if(!stbi_write_jpg(dstPath, srcWidth, srcHeight, channels, srcImg, quality))
+        {
+            std::cout << "not write image: " << dstPath << "\n";
+            return 2;
+        }
+
+        stbi_image_free(srcImg);
+        return 0;
+    }
+
     rectInPixels = mapToPixels(rectInPercents, srcWidth, srcHeight);
     
     stbi_uc* dstImg = new stbi_uc[rectInPixels.width * rectInPixels.height * channels];
