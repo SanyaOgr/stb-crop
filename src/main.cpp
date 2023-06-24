@@ -23,7 +23,7 @@ struct Rect
 
 void printUsageStr()
 {
-    std::cout << "Usage: -s [source image path] -d [destination image path] -q [quality] -- [x1] [y1] [x2] [y2]\n";
+    std::cout << "stb-cut usage: -s [source image path] -d [destination image path] -q [quality] -- [x1] [y1] [x2] [y2]\n";
 }
 
 Rect<size_t> mapToPixels(Rect<float> percents, size_t width, size_t height)
@@ -90,7 +90,7 @@ int main(int argc, char** argv)
     stbi_uc* srcImg = stbi_load(srcPath, &srcWidth, &srcHeight, &channels, 0);
     if(srcImg == nullptr)
     {
-        std::cout << "Not read image: " << srcPath << "\n";
+        std::cout << "not read image: " << srcPath << "\n";
         return 2;
     }
 
@@ -109,7 +109,7 @@ int main(int argc, char** argv)
 
     if(!stbi_write_jpg(dstPath, rectInPixels.width, rectInPixels.height, channels, dstImg, quality))
     {
-        std::cout << "Not write image: " << dstPath << "\n";
+        std::cout << "not write image: " << dstPath << "\n";
         return 2;
     }
 
