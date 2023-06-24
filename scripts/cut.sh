@@ -4,9 +4,10 @@
 
 num=$1
 x1=$2
-y1=$3
+y1=$((100 - $5))
 x2=$4
-y2=$5
+y2=$((100 - $3))
+
 good_size=$(($6 * 1024))
 
 src_dir="$HOME/photos"
@@ -19,9 +20,9 @@ cut_path="$cut_dir/$cut_name"
 
 # cut
 
-qual=80
+qual=100
 
-echo "-- Cutting: $(($x2 - $x1))x$(($y2 - $y1)), 80%"
+echo "-- Cutting: $(($x2 - $x1))% x $(($y2 - $y1))%, $qual%"
 stb-cut -s $src_path -d $cut_path -q $qual -- $x1 $y1 $x2 $y2 #> /dev/null
 
 size=$(stat -c '%s' $cut_path)
@@ -34,7 +35,7 @@ while [ $size -gt $good_size ] && [ $qual -gt 50 ]
 do
     qual=$(( $qual - 10 ))
 
-    echo "-- Decrease preview quality: $qual%"
+    echo "-- Decrease cut quality: $qual%"
     stb-cut -s $src_path -d $cut_path -q $qual -- $x1 $y1 $x2 $y2 #> /dev/null
 
     size=$(stat -c '%s' $cut_path)
