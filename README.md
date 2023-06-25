@@ -2,4 +2,4 @@
 Utility for cut images, based on stb-image library
 
 ## TODO
-- presets for default build and RPi build
+- cmake install code
