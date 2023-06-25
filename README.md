@@ -41,7 +41,7 @@ CMake install command copies binary and script to `~/bin` or `{projectDir}/rpi-i
 The `-s` and `-d` options specify the paths to the source image and the result. `-q` option sets quality of output image in percents. Cutting area coords are non-option parameters and take place after all options and `--` delimeter
 
 ```shell
-./stb-cut -s image_in.jpg -d image_out.jpg -q 90 -- 25 25 75 75
+stb-cut -s image_in.jpg -d image_out.jpg -q 90 -- 25 25 75 75
 ```
 
 
