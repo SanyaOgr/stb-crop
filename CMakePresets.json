@@ -11,7 +11,7 @@
                 "CMAKE_BUILD_TYPE": "MinSizeRel",
                 "CMAKE_C_COMPILER": "/usr/bin/gcc",
                 "CMAKE_CXX_COMPILER": "/usr/bin/g++",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/bin/default"
+                "CMAKE_INSTALL_PREFIX": "$ENV{HOME}"
             }
         },
         {
@@ -23,7 +23,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "MinSizeRel",
                 "CMAKE_TOOLCHAIN_FILE": "${sourceDir}/rpi-toolchain.cmake",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/bin/rpi"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/rpi-install"
             }
         }
     ]
