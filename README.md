@@ -1,5 +1,5 @@
 # stb-cut
-Utility for cut images, based on stb-image library
+Utility for cut images, based on stb_image lib
 
 ## TODO
 - cutted photo in archive
