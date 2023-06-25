@@ -2,4 +2,5 @@
 Utility for cut images, based on stb-image library
 
 ## TODO
-- cmake install code
+- cutted photo in archive
+- make cut.sh silent
