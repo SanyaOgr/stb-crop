@@ -22,12 +22,12 @@ cut_path="$cut_dir/$cut_name"
 
 qual=100
 
-echo "-- Cutting: $(($x2 - $x1))% x $(($y2 - $y1))%, $qual%"
-stb-cut -s $src_path -d $cut_path -q $qual -- $x1 $y1 $x2 $y2 #> /dev/null
+#echo "-- Cutting: $(($x2 - $x1))% x $(($y2 - $y1))%, $qual%"
+dimensions=$(stb-cut -s $src_path -d $cut_path -q $qual -- $x1 $y1 $x2 $y2) #> /dev/null
 
 size=$(stat -c '%s' $cut_path)
 
-echo "-- Cut size: $size b"
+#echo "-- Cut size: $size b"
 
 # decrease cut quality until size will be good
 
@@ -35,11 +35,11 @@ while [ $size -gt $good_size ] && [ $qual -gt 50 ]
 do
     qual=$(( $qual - 10 ))
 
-    echo "-- Decrease cut quality: $qual%"
-    stb-cut -s $cut_path -d $cut_path -q $qual -- 0 0 100 100 #> /dev/null
+    #echo "-- Decrease cut quality: $qual%"
+    stb-cut -s $cut_path -d $cut_path -q $qual -- 0 0 100 100 > /dev/null
 
     size=$(stat -c '%s' $cut_path)
-    echo "-- Cut size: $size b"
+    #echo "-- Cut size: $size b"
 done
 
 # add quality to name
@@ -58,4 +58,4 @@ tar -zcvf $cut_targz_name $cut_name > /dev/null
 
 # log
 
-echo "-- Cut photo archive: $cut_targz_name (Dimensions: $(($x2 - $x1))% x $(($y2 - $y1))% | Quality: $qual% | Size: $((($size + 512) / 1024)) Kb)"
+echo "-- Cut photo archive: $cut_targz_name (Dimensions: $dimensions | Quality: $qual% | Size: $((($size + 512) / 1024)) Kb)"
