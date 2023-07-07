@@ -49,10 +49,13 @@ cut_path="$cut_dir/$cut_name"
 
 mv $cut_dir/$num"cut.jpg" $cut_path
 
-# output
+# to archive
 
-echo "-- Cut photo: $cut_name ($(($x2 - $x1))% x $(($y2 - $y1))% quality $qual% $((($size + 512) / 1024)) Kb)"
+cut_targz_name=$num"cut"$qual".tar.gz"
 
-#cd $cut_dir
-#tar -zcvf $prev_targz_name $prev_name > /dev/null
-#echo "-- Preview archive: $prev_targz_name (340x240 $prev_qual % $(($prev_size/1024)) Kb)"
+cd $cut_dir
+tar -zcvf $cut_targz_name $cut_name > /dev/null
+
+# log
+
+echo "-- Cut photo archive: $cut_targz_name (Dimensions: $(($x2 - $x1))% x $(($y2 - $y1))% | Quality: $qual% | Size: $((($size + 512) / 1024)) Kb)"
