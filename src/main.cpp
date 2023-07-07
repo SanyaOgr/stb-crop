@@ -125,6 +125,8 @@ int main(int argc, char** argv)
         return 2;
     }
 
+    std::cout << rectInPixels.width << "x" << rectInPixels.height << std::endl;
+
     stbi_image_free(srcImg);
     delete[] dstImg;
     return 0;
